@@ -289,7 +289,7 @@ func (s *CostumeServiceServer) EnhanceActiveSkill(ctx context.Context, req *pb.E
 			log.Printf("[CostumeService] EnhanceActiveSkill: no max level func for rarity=%d", cm.RarityType)
 			return
 		}
-		maxLevel := maxLevelFunc.Evaluate(0)
+		maxLevel := maxLevelFunc.Evaluate(1)
 
 		addCount := req.AddLevelCount
 		if currentLevel+addCount > maxLevel {
