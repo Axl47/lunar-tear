@@ -131,6 +131,7 @@ func NewOctoHTTPServer(resourcesBaseURL string) *OctoHTTPServer {
 		revisions:        newRevisionTracker(),
 		resolver:         newAssetResolver(),
 	}
+	s.resolver.Prewarm("0")
 	s.mux.HandleFunc("/", s.handleAll)
 	return s
 }
