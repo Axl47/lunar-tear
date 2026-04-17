@@ -92,7 +92,7 @@ func (s *UserServiceServer) GameStart(ctx context.Context, _ *emptypb.Empty) (*p
 	log.Printf("[UserService] GameStart")
 
 	if md, ok := metadata.FromIncomingContext(ctx); ok {
-		if vals := md.Get("x-session-key"); len(vals) > 0 {
+		if vals := md.Get("x-apb-session-key"); len(vals) > 0 {
 			log.Printf("[UserService] GameStart session: %s", vals[0])
 		}
 	}
