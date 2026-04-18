@@ -38,4 +38,6 @@ Thumbs.db
 *.log
 
 frida/
-scripts/
+.local/
+.local/android-client/
+*.keystore

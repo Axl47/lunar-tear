@@ -30,7 +30,16 @@ func main() {
 		resourcesBaseURL = prefix + strings.Repeat("r", padLen)
 	}
 
-	go startHTTP(*httpPort, resourcesBaseURL)
+	if err := validateAssets("."); err != nil {
+		log.Fatalf("validate assets: %v", err)
+	}
+
+	go startHTTP(httpServerConfig{
+		Host:             *host,
+		Port:             *httpPort,
+		ResourcesBaseURL: resourcesBaseURL,
+		AssetsReady:      true,
+	})
 
 	db, err := database.Open(*dbPath)
 	if err != nil {

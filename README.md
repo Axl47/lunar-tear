@@ -10,9 +10,62 @@ Discord server: https://discord.gg/G3anrfcV
 - Go 1.25+
 - [goose](https://github.com/pressly/goose) migration tool
 - Populated `server/assets/` directory
+- Docker Desktop with `docker compose`
+- Python 3
+- For Android client prep: `adb`, `apktool`, `apksigner`, `zipalign`, `keytool`, and `7zz` or `7z`
 
 ```bash
 go install github.com/pressly/goose/v3/cmd/goose@latest
+```
+
+### Preferred Mac LAN Flow
+
+Use the helper script from the repository root:
+
+```bash
+rtk python3 scripts/mac_lan.py doctor
+```
+
+Canonical local inputs:
+
+- APK: `/Users/axel/Downloads/NieR Re[in]carnation 3.7.1.apk`
+- Master data: `~/Downloads/20240404193219.bin.e`
+- Asset dump archive: `~/Downloads/resource_dump_android.7z`
+
+When the asset archive has finished downloading:
+
+```bash
+rtk python3 scripts/mac_lan.py import-assets \
+  --archive ~/Downloads/resource_dump_android.7z \
+  --masterdata ~/Downloads/20240404193219.bin.e
+```
+
+Start the server for LAN access:
+
+```bash
+rtk python3 scripts/mac_lan.py start-server --scene 13
+```
+
+Prepare and install the patched Android client:
+
+```bash
+rtk python3 scripts/mac_lan.py prepare-client --install
+```
+
+The helper auto-detects a private LAN IP by default. Override with `--host` or `--server-ip` if needed.
+
+### Health Check
+
+After startup, verify readiness locally:
+
+```bash
+rtk curl http://127.0.0.1:8080/healthz
+```
+
+Expected JSON shape:
+
+```json
+{"ok":true,"host":"192.168.4.21","httpPort":8080,"grpcPort":443,"assetsReady":true}
 ```
 
 ### Regenerate protobuf stubs
@@ -70,11 +123,18 @@ sudo setcap cap_net_bind_service=+ep ./lunar-tear
 
 ### Flags
 
-| Flag          | Default      | Description                     |
-| ------------- | ------------ | ------------------------------- |
-| `--host`      | `127.0.0.1`  | hostname/IP given to the client |
-| `--http-port` | `8080`       | HTTP/Octo server port           |
-| `--db`        | `db/game.db` | SQLite database path            |
+| Flag          | Default      | Description                             |
+| ------------- | ------------ | --------------------------------------- |
+| `--host`      | `127.0.0.1`  | hostname/IP given to the client         |
+| `--http-port` | `8080`       | HTTP/Octo server port                   |
+| `--scene`     | `0`          | bootstrap new users to scene N          |
+| `--db`        | `db/game.db` | SQLite database path                    |
+
+### Notes
+
+- The helper intentionally refuses `import-assets` while `~/Downloads/resource_dump_android.7z` is empty or still downloading.
+- The server now validates `server/assets/` on startup and exits early if `assets/revisions/0/list.bin` or any `assets/release/*.bin.e` file is missing.
+- The APK patcher is version-coupled to client `3.7.1`.
 
 ## ⚠️ Legal Disclaimer
 
