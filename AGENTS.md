@@ -22,6 +22,9 @@ rtk proxy <cmd>     # Run raw command without filtering
 
 Whenever important updates are made, this file (`AGENTS.md`) should be updated with any surprising findings not apparent from the codebase that could benefit other developers. Focus on the why and when it could be useful.
 
+- The Android APK patcher is version-coupled to client `3.7.1` because the `libil2cpp.so` RVAs are hardcoded for that build. If a different APK is used, expect the binary patch step to be unsafe until the offsets are regenerated.
+- The repo previously ignored `scripts/` in `.gitignore`, which hides new helper scripts from Git. Keep that in mind if future tooling additions seem to "disappear" from status output.
+
 ## Sub Agents
 
 Use sub-agents where appropriate to break down complex changes into manageable pieces, and to allow for more focused implementation and testing. For example, if implementing a new feature that requires both backend and frontend changes, you might create separate sub-agents for each layer of the stack, but before then use an exploring agent (or multiple) to get context on the codebase and research the best approaches for the feature, outline the specific steps needed for implementation into a final exec plan, and spin up task subagents that handle the implementation. This allows for more efficient development and testing, as each sub-agent can focus on a specific aspect of the implementation, and can be tested independently before being integrated into the larger codebase.

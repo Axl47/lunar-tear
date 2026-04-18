@@ -3,12 +3,11 @@ services:
     build: .
     image: kretts/lunar-tear:latest
     environment:
-      LUNAR_HOST: 127.0.0.1
-      LUNAR_HTTP_PORT: 8080
-      LUNAR_SCENE: 0
+      LUNAR_HOST: ${LUNAR_HOST:-127.0.0.1}
+      LUNAR_HTTP_PORT: ${LUNAR_HTTP_PORT:-8080}
+      LUNAR_SCENE: ${LUNAR_SCENE:-0}
     volumes:
       - ./assets:/opt/lunar-tear/assets
     ports:
       - 443:443 # grpc, hardcoded by the client, not configurable
       - 8080:8080
-
