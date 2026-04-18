@@ -1,4 +1,4 @@
-# STATE SCALPEL AGENTS DOCUMENT
+# LUNAR TEAR AGENTS DOCUMENT
 
 ## ExecPlans
 
@@ -21,11 +21,6 @@ rtk proxy <cmd>     # Run raw command without filtering
 ## Development Details
 
 Whenever important updates are made, this file (`AGENTS.md`) should be updated with any surprising findings not apparent from the codebase that could benefit other developers. Focus on the why and when it could be useful.
-
-- Phase 1 backups are intentionally stored as global manual entries instead of per-domain entries. With the chosen minimal permissions (`storage`, `clipboardWrite` only), the extension cannot read the active tab URL, so there is no reliable domain key until later phases add tab/page access.
-- Firefox sidebar toolbar integration is more reliable when the `action` click handler calls `browser.sidebarAction.toggle()` directly. The earlier `isOpen()` → `close()` / `open()` sequence can silently fail in practice even though the sidebar APIs exist, so use `toggle()` first and only fall back to `open()` if Firefox rejects the toggle call.
-- Some `LZString.compressToEncodedURIComponent()` outputs are indistinguishable from `compressToBase64()` outputs for certain payloads. Exact codec identification is therefore best-effort in ambiguous cases; round-trip tests should prioritize data fidelity unless the payload contains distinguishing URI/Base64 characters.
-- Base64-wrapped raw `LZString.compress()` data cannot be treated as UTF-8 text. The outer Base64 layer must preserve the inner UTF-16 code units directly, or decode/encode symmetry breaks for raw LZString saves.
 
 ## Sub Agents
 
